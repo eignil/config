@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import ssl
 import hashlib
 
 def _print(*objects, **kwargs):
@@ -27,7 +28,7 @@ def run_command(cmd,shell=False,cwd=os.getcwd(),env=os.environ.copy()):
     else:
         return True
 
-def download(url,dir,file_name=None):
+def download(url,dir=os.getcwd(),file_name=None):
     if file_name:
         real_path = os.path.join(dir, file_name)
         if os.path.exists(real_path):
@@ -35,19 +36,29 @@ def download(url,dir,file_name=None):
             return True
     if not os.path.exists(dir):
         os.makedirs(dir)
+    cmd = ['wget','-c','-nv','-t','3','-T','6']
+    verify_path = ssl.get_default_verify_paths()
+    print(verify_path)
+    openssl_capath = verify_path.openssl_capath
+    if url.find("https")==0:
+        cmd.extend(['--ca-directory='+openssl_capath])
     if file_name:
-        cmd = 'wget' + ' --no-cookie'+' --no-check-certificate'+' -q'+' -c'+' -nv'+' -t3'+' -T60'+" -O "+file_name+' '+url
+        cmd.extend(['-O',file_name,url])
+        #cmd = 'wget' + ' --no-cookie'+' --no-check-certificate'+' -c'+' -nv'+' -t3'+' -T60'+" -O "+file_name+' '+url
     else:
-        cmd = 'wget' + ' --no-cookie'+' --no-check-certificate'+' -q' + ' -c' + ' -nv' + ' -t3' + ' -T60' + ' ' + url
-    out = run_command(cmd, cwd=dir)
+        cmd.extend([url])
+        #cmd = 'wget' + ' --no-cookie'+' --no-check-certificate'+' -c' + ' -nv' + ' -t3' + ' -T60' + ' ' + url
+
+
+    out = run_command(cmd,shell=False, cwd=dir)
     print(out)
     if out and isinstance(out, str):
-        file_name = out.split('->')[1]
-        file_name = file_name.split('"')
+        file_name = out.split('->')
+        print(file_name)
+        file_name = file_name[0].split('"')
         print(file_name)
     else:
         return out
-    return run_command(cmd,cwd=dir,shell=True)
 
 
 def verify_sig(file_path,sig,hash_type):
