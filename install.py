@@ -9,17 +9,17 @@ def download_tomcat(install_path):
     tomcat_url="http://mirror.bit.edu.cn/apache/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz"
     tomcat_sha256_url="https://www.apache.org/dist/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz.sha512"
 
-    download(download_path,"apache-tomcat-9.0.6.tar.gz",tomcat_url)
-    download(download_path,"apache-tomcat-9.0.6.tar.gz.sha512",tomcat_sha256_url)
+    download(tomcat_url,download_path)
+    download(tomcat_sha256_url,download_path)
     hash_con = open(os.path.join(download_path,"apache-tomcat-9.0.6.tar.gz.sha512")).read()
     if verify_sig(os.path.join(download_path,"apache-tomcat-9.0.6.tar.gz"),hash_con,"sha512"):
-        run_cmd(['tar','-xf',"apache-tomcat-9.0.6.tar.gz"],cwd=install_path)
+        run_command(['tar','-xf',"apache-tomcat-9.0.6.tar.gz"],cwd=install_path)
 
 
 
 def install_supervisor():
     cmd = ["pip2","install","supervisor"]
-    run_cmd(cmd)
+    run_command(cmd)
 
 
 
