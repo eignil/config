@@ -16,7 +16,7 @@ def install_supervisor():
 
 
 
-def config_tomcat_supervisor(java_home,catalina_home,catalina_base):
+def config_tomcat_supervisor(user,java_home,catalina_home,catalina_base):
     '''
 
     :param java_home: The JRE_HOME variable is used to specify location of a JRE. The JAVA_HOME
@@ -25,8 +25,8 @@ def config_tomcat_supervisor(java_home,catalina_home,catalina_base):
     :param catalina_base: generally, same as catalina_home
     :return:
     '''
-    supervisor_wrapper ="""
-#!/bin/bash
+    supervisor_wrapper =\
+"""#!/bin/bash
 # Source: http://serverfault.com/questions/425132/controlling-tomcat-with-supervisor
 function shutdown()
 {
@@ -51,8 +51,19 @@ trap shutdown HUP INT QUIT ABRT KILL ALRM TERM TSTP
 echo "Waiting for `cat $CATALINA_PID`"
 wait `cat $CATALINA_PID`
     """%(java_home,catalina_home,catalina_base)
+    supervisor_conf =\
+"""[program:tomcat]
+command={cmd_path}
+process_name=%(program_name)s
+directory={run_dir}
+user={user}
+redirect_stderr=true
+stdout_logfile=/var/log/tomcat.log
+""".format(cmd_path=os.path.join(catalina_home,'bin','supervisor-wrapper.sh'),run_dir=os.path.join(catalina_home),user=user)
     open(os.path.join(catalina_home,'bin','supervisor-wrapper.sh'),'w').write(supervisor_wrapper)
+    open(os.path.join(catalina_home,'tomcat.conf'),'w').write(supervisor_conf)
+
 
 download_install(tomcat_url,tomcat_sha256_url,download_path,"/home/eig/tmp")
 install_supervisor()
-config_tomcat_supervisor("/usr/bin/java","/home/eig/tmp/apache-tomcat-9.0.6","/home/eig/tmp/apache-tomcat-9.0.6")
+config_tomcat_supervisor("eig","/usr/bin/java","/home/eig/tmp/apache-tomcat-9.0.6","/home/eig/tmp/apache-tomcat-9.0.6")
