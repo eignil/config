@@ -3,17 +3,10 @@ import os
 import subprocess
 from util import *
 download_path = "download_dir"
+tomcat_url="http://mirror.bit.edu.cn/apache/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz"
+tomcat_sha256_url="https://www.apache.org/dist/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz.sha1"
 
-def download_tomcat(install_path):
-    apache_tomcat="apache-tomcat"
-    tomcat_url="http://mirror.bit.edu.cn/apache/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz"
-    tomcat_sha256_url="https://www.apache.org/dist/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz.sha512"
 
-    download(tomcat_url,download_path)
-    download(tomcat_sha256_url,download_path)
-    hash_con = open(os.path.join(download_path,"apache-tomcat-9.0.6.tar.gz.sha512")).read()
-    if verify_sig(os.path.join(download_path,"apache-tomcat-9.0.6.tar.gz"),hash_con,"sha512"):
-        run_command(['tar','-xf',"apache-tomcat-9.0.6.tar.gz"],cwd=install_path)
 
 
 
@@ -32,7 +25,7 @@ def config_tomcat_supervisor(java_home,catalina_home,catalina_base):
     :param catalina_base: generally, same as catalina_home
     :return:
     '''
-    supervisor_wrapper ='''
+    supervisor_wrapper ="""
 #!/bin/bash
 # Source: http://serverfault.com/questions/425132/controlling-tomcat-with-supervisor
 function shutdown()
@@ -45,9 +38,9 @@ function shutdown()
 
 date
 echo "Starting Tomcat"
-export JAVA_HOME={java_home}
-export CATALINA_HOME={catalina_home}
-export CATALINA_BASE={catalina_base}
+export JAVA_HOME=%s
+export CATALINA_HOME=%s
+export CATALINA_BASE=%s
 export CATALINA_PID=/tmp/$$
 
 . $CATALINA_HOME/bin/catalina.sh start
@@ -57,9 +50,9 @@ trap shutdown HUP INT QUIT ABRT KILL ALRM TERM TSTP
 
 echo "Waiting for `cat $CATALINA_PID`"
 wait `cat $CATALINA_PID`
-    '''.format(java_home=java_home,catalina_home=catalina_home,catalina_base=catalina_base)
-    open(os.path.join(catalina_home,'bin','supervisor-wrapper.sh'),'w').write(supervisor_wrapper).close()
+    """%(java_home,catalina_home,catalina_base)
+    open(os.path.join(catalina_home,'bin','supervisor-wrapper.sh'),'w').write(supervisor_wrapper)
 
-download_tomcat('/Users/eig/software')
+download_install(tomcat_url,tomcat_sha256_url,download_path,"/home/eig/tmp")
 install_supervisor()
-config_tomcat_supervisor("/usr/bin/java","/Users/eig/software/apache-tomcat-9.0.6","/Users/eig/software/apache-tomcat-9.0.6")
+config_tomcat_supervisor("/usr/bin/java","/home/eig/tmp/apache-tomcat-9.0.6","/home/eig/tmp/apache-tomcat-9.0.6")
