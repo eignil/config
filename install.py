@@ -64,6 +64,6 @@ stdout_logfile=/var/log/tomcat.log
     open(os.path.join(catalina_home,'tomcat.conf'),'w').write(supervisor_conf)
 
 
-download_install(tomcat_url,tomcat_sha256_url,download_path,"/home/eig/tmp")
-install_supervisor()
-config_tomcat_supervisor("eig","/usr/bin/java","/home/eig/tmp/apache-tomcat-9.0.6","/home/eig/tmp/apache-tomcat-9.0.6")
+#download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="./")
+#install_supervisor()
+config_tomcat_supervisor("eig","/usr/bin/java","/Users/eig/software/apache-tomcat-9.0.6","/Users/eig/software/apache-tomcat-9.0.6")
