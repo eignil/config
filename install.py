@@ -2,7 +2,7 @@
 import os
 import subprocess
 from util import *
-download_path = "download_dir"
+download_path = "download"
 tomcat_url="http://mirror.bit.edu.cn/apache/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz"
 tomcat_sha256_url="https://www.apache.org/dist/tomcat/tomcat-9/v9.0.6/bin/apache-tomcat-9.0.6.tar.gz.sha1"
 
@@ -63,7 +63,27 @@ stdout_logfile=/var/log/tomcat.log
     open(os.path.join(catalina_home,'bin','supervisor-wrapper.sh'),'w').write(supervisor_wrapper)
     open(os.path.join(catalina_home,'tomcat.conf'),'w').write(supervisor_conf)
 
+#https://www.vultr.com/docs/how-to-install-apache-tomcat-8-on-centos-7
+def create_tomcat_env(install_dir):
+    run_command(["groupadd","tomcat"])
+    run_command(["mkdir",install_dir])
+    run_command(["useradd","-s","/bin/nologin","-g","tomcat","-d",install_dir,"tomcat"])
 
-#download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="./")
-#install_supervisor()
-config_tomcat_supervisor("eig","/usr/bin/java","/Users/eig/software/apache-tomcat-9.0.6","/Users/eig/software/apache-tomcat-9.0.6")
+def setup_tomcat_dir(install_dir):
+    run_command(["chgrp","-R","tomcat",os.path.join(install_dir,"conf")])
+    run_command(["chmod","g+rwx",os.path.join(install_dir,"conf")])
+    run_command(["chmod","g+r",os.path.join(install_dir,"conf/*")])
+    run_command(["chown","-R","tomcat",os.path.join(install_dir,"logs"),os.path.join(install_dir,"temp"),os.path.join(install_dir,"webapps"),os.path.join(install_dir,"work")])
+    run_command(["chgrp","-R","tomcat",os.path.join(install_dir,"bin")])
+    run_command(["chgrp","-R","tomcat",os.path.join(install_dir,"lib")])
+    run_command(["chmod","g+rwx",os.path.join(install_dir,"bin")])
+    run_command(["chmod","g+r",os.path.join(install_dir,"bin/*")])
+
+create_tomcat_env()
+download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="/opt/tomcat")
+
+create_tomcat_env("/opt/tomcat")
+setup_tomcat_dir("/opt/tomcat")
+
+install_supervisor()
+config_tomcat_supervisor("tomcat","/usr/bin/java","/opt/tomcat","/opt/tomcat")
