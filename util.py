@@ -11,6 +11,7 @@ def _print(*objects, **kwargs):
   out.write(sep.join(objects) + end)
 
 def run_command(cmd,shell=False,cwd=os.getcwd(),env=None):
+    print(" ".join(cmd))
     proc = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=shell,cwd=cwd,env=env)
     out = proc.stdout.read().decode().strip()
     proc.stdout.close()
@@ -19,7 +20,7 @@ def run_command(cmd,shell=False,cwd=os.getcwd(),env=None):
     proc.stdout.close()
 
     if proc.wait() != 0:
-        print("out:",out )
+        print("out:", out)
         print("err:", err)
         return False
     if err and out:
@@ -39,6 +40,7 @@ def download(url,dir=os.getcwd(),file_name=None):
             return file_name
     if not os.path.exists(dir):
         os.makedirs(dir)
+    print(dir)
     cmd = ['wget','-c','-nv','-t','3','-T','30']
     if file_name:
         cmd.extend(['-O',file_name,url])
