@@ -8,6 +8,7 @@
     </view>
     <view class="line">
         <text>登录接口测试</text>
+        <button open-type="getUserInfo" bindgetuserinfo="getUserInfoAction">授权用户信息</button>
         <input type="text" value="{{loginUrl}}" disabled class="hide"></input>
         <view class="line-control">
             <view bindtap="doLogin" class="item"><view class="item-inner">登录</view></view>
