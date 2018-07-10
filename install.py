@@ -95,10 +95,10 @@ def setup_tomcat_dir(install_dir):
     run_command(["chmod","g+rwx",os.path.join(install_dir,"bin")])
     run_command(["chmod","g+r",os.path.join(install_dir,"bin/*")])
 
-create_tomcat_env("/opt/tomcat")
-download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="/opt/tomcat")
+#create_tomcat_env("/opt/tomcat")
+#download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="/opt/tomcat")
 
-setup_tomcat_dir("/opt/tomcat")
+#setup_tomcat_dir("/opt/tomcat")
 
 install_supervisor()
-config_tomcat_supervisor("tomcat","/usr/bin/java","/opt/tomcat","/opt/tomcat")
+#config_tomcat_supervisor("tomcat","/usr/bin/java","/opt/tomcat","/opt/tomcat")
