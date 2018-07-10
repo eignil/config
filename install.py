@@ -14,8 +14,24 @@ def install_supervisor():
     cmd = ["pip2","install","supervisor"]
     run_command(cmd)
 
+def install_screen():
+    cmd = ["apt-get","install","screen"]
+    run_command(cmd)
 
 
+def install_pip():
+    cmd = ["apt-get","install","python3-pip"]
+    run_command(cmd)
+    cmd = ["apt-get","install","python-pip"]
+    run_command(cmd)
+    cmd = ["pip3","install","--upgrade","pip"]
+    run_command(cmd)
+    
+def install_pipenv():
+    cmd = ["pip","install","pipenv"]
+    run_command(cmd)
+    
+    
 def config_tomcat_supervisor(user,java_home,catalina_home,catalina_base):
     '''
 
