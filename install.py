@@ -31,6 +31,9 @@ def install_pipenv():
     cmd = ["pip","install","pipenv"]
     run_command(cmd)
     
+def install_nginx():
+    cmd = ["apt-get","install","-y","nginx"]
+    run_command(cmd)
     
 def config_tomcat_supervisor(user,java_home,catalina_home,catalina_base):
     '''
