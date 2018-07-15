@@ -10,27 +10,47 @@ def _print(*objects, **kwargs):
   out = kwargs.get('file', sys.stdout)
   out.write(sep.join(objects) + end)
 
+def ubuntu_install(package,para=None):
+    cmd = ["apt","install"]
+    if para:
+        cmd.append(para)
+    cmd.append(package)
+    return run_command(cmd)
+
+def pipenv_install(package,para=None):
+    cmd = ["pipenv","install"]
+    if para:
+        cmd.append(para)
+    cmd.append(package)
+    return run_command(cmd)
+
+
+
 def run_command(cmd,shell=False,cwd=os.getcwd(),env=None):
-    print(" ".join(cmd))
-    proc = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=shell,cwd=cwd,env=env)
-    out = proc.stdout.read().decode().strip()
-    proc.stdout.close()
+    try:
+        print(" ".join(cmd))
+        proc = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=shell,cwd=cwd,env=env)
+        out = proc.stdout.read().decode().strip()
+        proc.stdout.close()
 
-    err = proc.stderr.read().decode().strip()
-    proc.stdout.close()
+        err = proc.stderr.read().decode().strip()
+        proc.stdout.close()
 
-    if proc.wait() != 0:
-        print("out:", out)
-        print("err:", err)
-        return False
-    if err and out:
-        return out +err
-    if out:
-        return out
-    elif err:
-        return err
-    else:
-        return True
+        if proc.wait() != 0:
+            print("out:", out)
+            print("err:", err)
+            return False
+        if err and out:
+            return out +err
+        if out:
+            return out
+        elif err:
+            return err
+        else:
+            return True
+    except Exception as ex:
+        print(ex)
+        return ex
 
 def download(url,dir=os.getcwd(),file_name=None):
     if file_name:
