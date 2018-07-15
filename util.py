@@ -94,4 +94,4 @@ def download_install(tar_url,tar_name=None,tar_sign_url=None,tar_sign_name=None,
                     if not verify_sig(os.path.join(download_path,tar_file_name),hash_con,hash_type):
                         return False
 
-    return run_command(['tar','-xf',os.path.join(download_path,tar_file_name),'-C',install_path])
+    return run_command(['tar','-xf',os.path.join(download_path,tar_file_name),'-C',install_path,"--strip-components=1" ])
