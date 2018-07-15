@@ -14,8 +14,27 @@ def install_supervisor():
     cmd = ["pip2","install","supervisor"]
     run_command(cmd)
 
+def install_screen():
+    cmd = ["apt-get","install","screen"]
+    run_command(cmd)
 
 
+def install_pip():
+    cmd = ["apt-get","install","python3-pip"]
+    run_command(cmd)
+    cmd = ["apt-get","install","python-pip"]
+    run_command(cmd)
+    cmd = ["pip3","install","--upgrade","pip"]
+    run_command(cmd)
+    
+def install_pipenv():
+    cmd = ["pip","install","pipenv"]
+    run_command(cmd)
+    
+def install_nginx():
+    cmd = ["apt-get","install","-y","nginx"]
+    run_command(cmd)
+    
 def config_tomcat_supervisor(user,java_home,catalina_home,catalina_base):
     '''
 
@@ -79,10 +98,10 @@ def setup_tomcat_dir(install_dir):
     run_command(["chmod","g+rwx",os.path.join(install_dir,"bin")])
     run_command(["chmod","g+r",os.path.join(install_dir,"bin/*")])
 
-create_tomcat_env("/opt/tomcat")
-download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="/opt/tomcat")
+#create_tomcat_env("/opt/tomcat")
+#download_install(tar_url=tomcat_url,tar_sign_url=tomcat_sha256_url,download_path=os.path.join(os.getcwd(),download_path),install_path="/opt/tomcat")
 
-setup_tomcat_dir("/opt/tomcat")
+#setup_tomcat_dir("/opt/tomcat")
 
 install_supervisor()
-config_tomcat_supervisor("tomcat","/usr/bin/java","/opt/tomcat","/opt/tomcat")
+#config_tomcat_supervisor("tomcat","/usr/bin/java","/opt/tomcat","/opt/tomcat")
