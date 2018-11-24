@@ -17,13 +17,19 @@ def ubuntu_install(package,para=None):
     cmd.append(package)
     return run_command(cmd)
 
+def centos_install(package,para=None):
+    cmd = ["yum","install"]
+    if para:
+        cmd.append(para)
+    cmd.append(package)
+    return run_command(cmd)
+
 def pipenv_install(package,para=None):
     cmd = ["pipenv","install"]
     if para:
         cmd.append(para)
     cmd.append(package)
     return run_command(cmd)
-
 
 
 def run_command(cmd,shell=False,cwd=os.getcwd(),env=None):
